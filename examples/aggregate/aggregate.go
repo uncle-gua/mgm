@@ -1,9 +1,9 @@
 package aggregate
 
 import (
-	"github.com/kamva/mgm/v3"
-	"github.com/kamva/mgm/v3/builder"
-	"github.com/kamva/mgm/v3/field"
+	"github.com/uncle-uga/mgm"
+	"github.com/uncle-uga/mgm/builder"
+	"github.com/uncle-uga/mgm/field"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -17,8 +17,8 @@ func seed() {
 }
 
 func delSeededData() {
-	_, _ = mgm.Coll(&book{}).DeleteMany(nil, bson.M{})
-	_, _ = mgm.Coll(&author{}).DeleteMany(nil, bson.M{})
+	_, _ = mgm.Coll(&book{}).DeleteMany(bson.M{})
+	_, _ = mgm.Coll(&author{}).DeleteMany(bson.M{})
 }
 
 func lookup() error {
@@ -33,15 +33,16 @@ func lookup() error {
 		builder.S(builder.Lookup(authorColl.Name(), "author_id", field.ID, "author")),
 	}
 
-	cur, err := mgm.Coll(&book{}).Aggregate(mgm.Ctx(), pipeline)
+	ctx := mgm.Ctx()
+	cur, err := mgm.Coll(&book{}).AggregateWithCtx(ctx, pipeline)
 
 	if err != nil {
 		return err
 	}
 
-	defer cur.Close(nil)
+	defer cur.Close(ctx)
 
-	for cur.Next(nil) {
+	for cur.Next(ctx) {
 		var result bson.M
 		err := cur.Decode(&result)
 		if err != nil {

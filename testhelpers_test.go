@@ -1,11 +1,12 @@
 package mgm_test
 
 import (
-	"github.com/kamva/mgm/v3"
-	"github.com/kamva/mgm/v3/internal/util"
+	"testing"
+
+	"github.com/uncle-uga/mgm"
+	"github.com/uncle-uga/mgm/internal/util"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"testing"
 )
 
 func setupDefConnection() {
@@ -15,8 +16,8 @@ func setupDefConnection() {
 }
 
 func resetCollection() {
-	_, err := mgm.Coll(&Doc{}).DeleteMany(mgm.Ctx(), bson.M{})
-	_, err2 := mgm.Coll(&Person{}).DeleteMany(mgm.Ctx(), bson.M{})
+	_, err := mgm.Coll(&Doc{}).DeleteMany(bson.M{})
+	_, err2 := mgm.Coll(&Person{}).DeleteMany(bson.M{})
 
 	util.PanicErr(err)
 	util.PanicErr(err2)
@@ -29,14 +30,14 @@ func seed() {
 		NewDoc("Reza", 26),
 		NewDoc("Omid", 27),
 	}
-	_, err := mgm.Coll(&Doc{}).InsertMany(mgm.Ctx(), docs)
+	_, err := mgm.Coll(&Doc{}).InsertMany(docs)
 
 	util.PanicErr(err)
 }
 
 func findDoc(t *testing.T) *Doc {
 	found := &Doc{}
-	util.AssertErrIsNil(t, mgm.Coll(found).FindOne(mgm.Ctx(), bson.M{}).Decode(found))
+	util.AssertErrIsNil(t, mgm.Coll(found).FindOne(bson.M{}).Decode(found))
 
 	return found
 }

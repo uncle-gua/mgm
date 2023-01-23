@@ -3,10 +3,11 @@ package mgm
 import (
 	"context"
 	"errors"
-	"github.com/kamva/mgm/v3/internal/util"
+	"time"
+
+	"github.com/uncle-gua/mgm/internal/util"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"time"
 )
 
 var config *Config
@@ -21,7 +22,8 @@ type Config struct {
 
 // NewCtx function creates and returns a new context with the specified timeout.
 func NewCtx(timeout time.Duration) context.Context {
-	ctx, _ := context.WithTimeout(context.Background(), timeout)
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
 
 	return ctx
 }
@@ -53,7 +55,7 @@ func NewClient(opts ...*options.ClientOptions) (*mongo.Client, error) {
 func NewCollection(db *mongo.Database, name string, opts ...*options.CollectionOptions) *Collection {
 	coll := db.Collection(name, opts...)
 
-	return &Collection{Collection: coll}
+	return &Collection{c: coll}
 }
 
 // ResetDefaultConfig resets the configuration values, client and database.
@@ -97,7 +99,7 @@ func DefaultConfigs() (*Config, *mongo.Client, *mongo.Database, error) {
 	return config, client, db, nil
 }
 
-// defaultConf are the default configuration values when none are provided 
+// defaultConf are the default configuration values when none are provided
 // to the `SetDefaultConfig` method.
 func defaultConf() *Config {
 	return &Config{CtxTimeout: 10 * time.Second}

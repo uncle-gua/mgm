@@ -1,10 +1,11 @@
 package mgm_test
 
 import (
-	"github.com/kamva/mgm/v3"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
+	"github.com/uncle-uga/mgm"
 )
 
 func TestGetModelCollection(t *testing.T) {

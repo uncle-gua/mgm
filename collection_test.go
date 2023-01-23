@@ -1,15 +1,16 @@
 package mgm_test
 
 import (
-	"github.com/kamva/mgm/v3"
-	"github.com/kamva/mgm/v3/builder"
-	"github.com/kamva/mgm/v3/internal/util"
-	"github.com/kamva/mgm/v3/operator"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/uncle-uga/mgm"
+	"github.com/uncle-uga/mgm/builder"
+	"github.com/uncle-uga/mgm/internal/util"
+	"github.com/uncle-uga/mgm/operator"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"testing"
 )
 
 func TestFindByIdWithInvalidId(t *testing.T) {
@@ -101,7 +102,7 @@ func TestCollection_SimpleFind(t *testing.T) {
 	util.AssertErrIsNil(t, err)
 
 	// Create same aggregation by raw methods
-	cur, err := mgm.Coll(&Doc{}).Find(mgm.Ctx(), filter)
+	cur, err := mgm.Coll(&Doc{}).Find(filter)
 	util.AssertErrIsNil(t, err)
 
 	util.AssertErrIsNil(t, cur.All(mgm.Ctx(), &expectedResult))
@@ -133,7 +134,7 @@ func TestCollection_SimpleAggregateFirst(t *testing.T) {
 	util.AssertErrIsNil(t, err)
 
 	// Create same aggregation by raw methods
-	cur, err := mgm.Coll(&Doc{}).Aggregate(mgm.Ctx(), bson.A{builder.S(group)}, nil)
+	cur, err := mgm.Coll(&Doc{}).Aggregate(bson.A{builder.S(group)}, nil)
 	util.AssertErrIsNil(t, err)
 	util.AssertErrIsNil(t, cur.All(mgm.Ctx(), &expectedResult))
 	assert.Equal(t, expectedResult[0], gotResult)
@@ -171,7 +172,7 @@ func TestCollection_SimpleAggregate(t *testing.T) {
 	util.AssertErrIsNil(t, err)
 
 	// Create same aggregation by raw methods
-	cur, err := mgm.Coll(&Doc{}).Aggregate(mgm.Ctx(), bson.A{builder.S(group), project}, nil)
+	cur, err := mgm.Coll(&Doc{}).Aggregate(bson.A{builder.S(group), project}, nil)
 	util.AssertErrIsNil(t, err)
 
 	util.AssertErrIsNil(t, cur.All(mgm.Ctx(), &expectedResult))

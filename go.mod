@@ -1,4 +1,4 @@
-module github.com/kamva/mgm/v3
+module github.com/uncle-gua/mgm
 
 go 1.14
 

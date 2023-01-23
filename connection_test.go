@@ -1,12 +1,13 @@
 package mgm_test
 
 import (
-	"github.com/kamva/mgm/v3"
-	"github.com/kamva/mgm/v3/internal/util"
+	"testing"
+
 	"github.com/stretchr/testify/require"
+	"github.com/uncle-uga/mgm"
+	"github.com/uncle-uga/mgm/internal/util"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
-	"testing"
 )
 
 func TestSetupDefaultConnection(t *testing.T) {

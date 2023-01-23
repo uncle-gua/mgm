@@ -3,8 +3,8 @@ package mgm
 import (
 	"context"
 
-	"github.com/kamva/mgm/v3/builder"
-	"github.com/kamva/mgm/v3/field"
+	"github.com/uncle-gua/mgm/builder"
+	"github.com/uncle-uga/mgm/field"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -12,7 +12,7 @@ import (
 
 // Collection performs operations on models and the given Mongodb collection
 type Collection struct {
-	*mongo.Collection
+	c *mongo.Collection
 }
 
 // FindByID method finds a doc and decodes it to a model, otherwise returns an error.
@@ -69,11 +69,85 @@ func (coll *Collection) UpdateWithCtx(ctx context.Context, model Model, opts ...
 	return update(ctx, coll, model, opts...)
 }
 
+// Update function persists the changes made to a model to the database.
+// Calling this method also invokes the model's mgm updating, updated,
+// saving, and saved hooks.
+func (coll *Collection) UpdateByID(id interface{}, model Model, opts ...*options.UpdateOptions) error {
+	return coll.UpdateByIDWithCtx(ctx(), id, model, opts...)
+}
+
+// UpdateWithCtx function persists the changes made to a model to the database using the specified context.
+// Calling this method also invokes the model's mgm updating, updated,
+// saving, and saved hooks.
+func (coll *Collection) UpdateByIDWithCtx(ctx context.Context, id interface{}, model Model, opts ...*options.UpdateOptions) error {
+	id, err := model.PrepareID(id)
+
+	if err != nil {
+		return err
+	}
+	model.SetID(id)
+
+	return update(ctx, coll, model, opts...)
+}
+
 // Delete method deletes a model (doc) from a collection.
 // To perform additional operations when deleting a model
 // you should use hooks rather than overriding this method.
 func (coll *Collection) Delete(model Model) error {
 	return del(ctx(), coll, model)
+}
+
+// Name method return the collection name.
+func (coll *Collection) Name() string {
+	return coll.c.Name()
+}
+
+func (coll *Collection) CountDocuments(filter interface{}, opts ...*options.CountOptions) (int64, error) {
+	return coll.CountDocumentsWithCtx(ctx(), filter, opts...)
+}
+
+func (coll *Collection) CountDocumentsWithCtx(ctx context.Context, filter interface{}, opts ...*options.CountOptions) (int64, error) {
+	return coll.c.CountDocuments(ctx, filter, opts...)
+}
+
+func (coll *Collection) Find(filter interface{}, opts ...*options.FindOptions) (*mongo.Cursor, error) {
+	return coll.FindWithCtx(ctx(), filter, opts...)
+}
+
+func (coll *Collection) FindWithCtx(ctx context.Context, filter interface{}, opts ...*options.FindOptions) (*mongo.Cursor, error) {
+	return coll.c.Find(ctx, filter)
+}
+
+func (coll *Collection) DeleteMany(filter interface{}, opts ...*options.DeleteOptions) (*mongo.DeleteResult, error) {
+	return coll.DeleteManyCtx(ctx(), filter, opts...)
+}
+
+func (coll *Collection) DeleteManyCtx(ctx context.Context, filter interface{}, opts ...*options.DeleteOptions) (*mongo.DeleteResult, error) {
+	return coll.c.DeleteMany(ctx, filter)
+}
+
+func (coll *Collection) InsertMany(documents []interface{}, opts ...*options.InsertManyOptions) (*mongo.InsertManyResult, error) {
+	return coll.InsertManyCtx(ctx(), documents, opts...)
+}
+
+func (coll *Collection) InsertManyCtx(ctx context.Context, documents []interface{}, opts ...*options.InsertManyOptions) (*mongo.InsertManyResult, error) {
+	return coll.c.InsertMany(ctx, documents, opts...)
+}
+
+func (coll *Collection) FindOne(filter interface{}, opts ...*options.FindOneOptions) *mongo.SingleResult {
+	return coll.FindOneWithCtx(ctx(), filter, opts...)
+}
+
+func (coll *Collection) FindOneWithCtx(ctx context.Context, filter interface{}, opts ...*options.FindOneOptions) *mongo.SingleResult {
+	return coll.c.FindOne(ctx, filter, opts...)
+}
+
+func (coll *Collection) Aggregate(pipeline interface{}, opts ...*options.AggregateOptions) (*mongo.Cursor, error) {
+	return coll.AggregateWithCtx(ctx(), pipeline, opts...)
+}
+
+func (coll *Collection) AggregateWithCtx(ctx context.Context, pipeline interface{}, opts ...*options.AggregateOptions) (*mongo.Cursor, error) {
+	return coll.c.Aggregate(ctx, pipeline, opts...)
 }
 
 // DeleteWithCtx method deletes a model (doc) from a collection using the specified context.
@@ -90,7 +164,7 @@ func (coll *Collection) SimpleFind(results interface{}, filter interface{}, opts
 
 // SimpleFindWithCtx finds, decodes and returns the results using the specified context.
 func (coll *Collection) SimpleFindWithCtx(ctx context.Context, results interface{}, filter interface{}, opts ...*options.FindOptions) error {
-	cur, err := coll.Find(ctx, filter, opts...)
+	cur, err := coll.c.Find(ctx, filter, opts...)
 
 	if err != nil {
 		return err
@@ -161,5 +235,5 @@ func (coll *Collection) SimpleAggregateCursorWithCtx(ctx context.Context, stages
 		}
 	}
 
-	return coll.Aggregate(ctx, pipeline, nil)
+	return coll.c.Aggregate(ctx, pipeline, nil)
 }
