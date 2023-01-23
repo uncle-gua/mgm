@@ -1,7 +1,7 @@
 package crud
 
 import (
-	"github.com/uncle-uga/mgm"
+	"github.com/uncle-gua/mgm"
 )
 
 type book struct {

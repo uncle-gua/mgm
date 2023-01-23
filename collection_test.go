@@ -5,10 +5,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/uncle-uga/mgm"
-	"github.com/uncle-uga/mgm/builder"
-	"github.com/uncle-uga/mgm/internal/util"
-	"github.com/uncle-uga/mgm/operator"
+	"github.com/uncle-gua/mgm"
+	"github.com/uncle-gua/mgm/builder"
+	"github.com/uncle-gua/mgm/internal/util"
+	"github.com/uncle-gua/mgm/operator"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )

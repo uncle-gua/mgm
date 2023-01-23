@@ -1,9 +1,9 @@
 package aggregate
 
 import (
-	"github.com/uncle-uga/mgm"
-	"github.com/uncle-uga/mgm/builder"
-	"github.com/uncle-uga/mgm/field"
+	"github.com/uncle-gua/mgm"
+	"github.com/uncle-gua/mgm/builder"
+	"github.com/uncle-gua/mgm/field"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

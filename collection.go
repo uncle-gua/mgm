@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/uncle-gua/mgm/builder"
-	"github.com/uncle-uga/mgm/field"
+	"github.com/uncle-gua/mgm/field"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"

@@ -1,7 +1,7 @@
 package builder
 
 import (
-	"github.com/uncle-uga/mgm/internal/util"
+	"github.com/uncle-gua/mgm/internal/util"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

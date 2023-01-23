@@ -4,7 +4,7 @@ import (
 	"reflect"
 
 	"github.com/jinzhu/inflection"
-	"github.com/uncle-uga/mgm/internal/util"
+	"github.com/uncle-gua/mgm/internal/util"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 

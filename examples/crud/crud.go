@@ -1,6 +1,6 @@
 package crud
 
-import "github.com/uncle-uga/mgm"
+import "github.com/uncle-gua/mgm"
 
 func crud() error {
 
