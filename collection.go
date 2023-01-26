@@ -19,7 +19,10 @@ type Collection struct {
 // The id field can be any value that if passed to the `PrepareID` method, it returns
 // a valid ID (e.g string, bson.ObjectId).
 func (coll *Collection) FindByID(id interface{}, model Model, opts ...*options.FindOneOptions) error {
-	return coll.FindByIDWithCtx(ctx(), id, model, opts...)
+	ctx, cancel := ctx()
+	defer cancel()
+
+	return coll.FindByIDWithCtx(ctx, id, model, opts...)
 }
 
 // FindByIDWithCtx method finds a doc and decodes it to a model, otherwise returns an error.
@@ -37,7 +40,10 @@ func (coll *Collection) FindByIDWithCtx(ctx context.Context, id interface{}, mod
 
 // First method searches and returns the first document in the search results.
 func (coll *Collection) First(filter interface{}, model Model, opts ...*options.FindOneOptions) error {
-	return coll.FirstWithCtx(ctx(), filter, model, opts...)
+	ctx, cancel := ctx()
+	defer cancel()
+
+	return coll.FirstWithCtx(ctx, filter, model, opts...)
 }
 
 // FirstWithCtx method searches and returns the first document in the search results.
@@ -47,7 +53,10 @@ func (coll *Collection) FirstWithCtx(ctx context.Context, filter interface{}, mo
 
 // Create method inserts a new model into the database.
 func (coll *Collection) Create(model Model, opts ...*options.InsertOneOptions) error {
-	return coll.CreateWithCtx(ctx(), model, opts...)
+	ctx, cancel := ctx()
+	defer cancel()
+
+	return coll.CreateWithCtx(ctx, model, opts...)
 }
 
 // CreateWithCtx method inserts a new model into the database.
@@ -59,7 +68,10 @@ func (coll *Collection) CreateWithCtx(ctx context.Context, model Model, opts ...
 // Calling this method also invokes the model's mgm updating, updated,
 // saving, and saved hooks.
 func (coll *Collection) Update(model Model, opts ...*options.UpdateOptions) error {
-	return coll.UpdateWithCtx(ctx(), model, opts...)
+	ctx, cancel := ctx()
+	defer cancel()
+
+	return coll.UpdateWithCtx(ctx, model, opts...)
 }
 
 // UpdateWithCtx function persists the changes made to a model to the database using the specified context.
@@ -73,7 +85,10 @@ func (coll *Collection) UpdateWithCtx(ctx context.Context, model Model, opts ...
 // Calling this method also invokes the model's mgm updating, updated,
 // saving, and saved hooks.
 func (coll *Collection) UpdateByID(id interface{}, model Model, opts ...*options.UpdateOptions) error {
-	return coll.UpdateByIDWithCtx(ctx(), id, model, opts...)
+	ctx, cancel := ctx()
+	defer cancel()
+
+	return coll.UpdateByIDWithCtx(ctx, id, model, opts...)
 }
 
 // UpdateWithCtx function persists the changes made to a model to the database using the specified context.
@@ -94,7 +109,10 @@ func (coll *Collection) UpdateByIDWithCtx(ctx context.Context, id interface{}, m
 // To perform additional operations when deleting a model
 // you should use hooks rather than overriding this method.
 func (coll *Collection) Delete(model Model) error {
-	return del(ctx(), coll, model)
+	ctx, cancel := ctx()
+	defer cancel()
+
+	return del(ctx, coll, model)
 }
 
 // Name method return the collection name.
@@ -103,7 +121,10 @@ func (coll *Collection) Name() string {
 }
 
 func (coll *Collection) CountDocuments(filter interface{}, opts ...*options.CountOptions) (int64, error) {
-	return coll.CountDocumentsWithCtx(ctx(), filter, opts...)
+	ctx, cancel := ctx()
+	defer cancel()
+
+	return coll.CountDocumentsWithCtx(ctx, filter, opts...)
 }
 
 func (coll *Collection) CountDocumentsWithCtx(ctx context.Context, filter interface{}, opts ...*options.CountOptions) (int64, error) {
@@ -111,7 +132,10 @@ func (coll *Collection) CountDocumentsWithCtx(ctx context.Context, filter interf
 }
 
 func (coll *Collection) Find(filter interface{}, opts ...*options.FindOptions) (*mongo.Cursor, error) {
-	return coll.FindWithCtx(ctx(), filter, opts...)
+	ctx, cancel := ctx()
+	defer cancel()
+
+	return coll.FindWithCtx(ctx, filter, opts...)
 }
 
 func (coll *Collection) FindWithCtx(ctx context.Context, filter interface{}, opts ...*options.FindOptions) (*mongo.Cursor, error) {
@@ -119,7 +143,10 @@ func (coll *Collection) FindWithCtx(ctx context.Context, filter interface{}, opt
 }
 
 func (coll *Collection) DeleteMany(filter interface{}, opts ...*options.DeleteOptions) (*mongo.DeleteResult, error) {
-	return coll.DeleteManyCtx(ctx(), filter, opts...)
+	ctx, cancel := ctx()
+	defer cancel()
+
+	return coll.DeleteManyCtx(ctx, filter, opts...)
 }
 
 func (coll *Collection) DeleteManyCtx(ctx context.Context, filter interface{}, opts ...*options.DeleteOptions) (*mongo.DeleteResult, error) {
@@ -127,7 +154,10 @@ func (coll *Collection) DeleteManyCtx(ctx context.Context, filter interface{}, o
 }
 
 func (coll *Collection) InsertMany(documents []interface{}, opts ...*options.InsertManyOptions) (*mongo.InsertManyResult, error) {
-	return coll.InsertManyCtx(ctx(), documents, opts...)
+	ctx, cancel := ctx()
+	defer cancel()
+
+	return coll.InsertManyCtx(ctx, documents, opts...)
 }
 
 func (coll *Collection) InsertManyCtx(ctx context.Context, documents []interface{}, opts ...*options.InsertManyOptions) (*mongo.InsertManyResult, error) {
@@ -135,7 +165,10 @@ func (coll *Collection) InsertManyCtx(ctx context.Context, documents []interface
 }
 
 func (coll *Collection) FindOne(filter interface{}, opts ...*options.FindOneOptions) *mongo.SingleResult {
-	return coll.FindOneWithCtx(ctx(), filter, opts...)
+	ctx, cancel := ctx()
+	defer cancel()
+
+	return coll.FindOneWithCtx(ctx, filter, opts...)
 }
 
 func (coll *Collection) FindOneWithCtx(ctx context.Context, filter interface{}, opts ...*options.FindOneOptions) *mongo.SingleResult {
@@ -143,7 +176,10 @@ func (coll *Collection) FindOneWithCtx(ctx context.Context, filter interface{}, 
 }
 
 func (coll *Collection) Aggregate(pipeline interface{}, opts ...*options.AggregateOptions) (*mongo.Cursor, error) {
-	return coll.AggregateWithCtx(ctx(), pipeline, opts...)
+	ctx, cancel := ctx()
+	defer cancel()
+
+	return coll.AggregateWithCtx(ctx, pipeline, opts...)
 }
 
 func (coll *Collection) AggregateWithCtx(ctx context.Context, pipeline interface{}, opts ...*options.AggregateOptions) (*mongo.Cursor, error) {
@@ -159,7 +195,10 @@ func (coll *Collection) DeleteWithCtx(ctx context.Context, model Model) error {
 
 // SimpleFind finds, decodes and returns the results.
 func (coll *Collection) SimpleFind(results interface{}, filter interface{}, opts ...*options.FindOptions) error {
-	return coll.SimpleFindWithCtx(ctx(), results, filter, opts...)
+	ctx, cancel := ctx()
+	defer cancel()
+
+	return coll.SimpleFindWithCtx(ctx, results, filter, opts...)
 }
 
 // SimpleFindWithCtx finds, decodes and returns the results using the specified context.
@@ -179,7 +218,10 @@ func (coll *Collection) SimpleFindWithCtx(ctx context.Context, results interface
 
 // SimpleAggregateFirst is just same as SimpleAggregateFirstWithCtx, but doesn't get context param.
 func (coll *Collection) SimpleAggregateFirst(result interface{}, stages ...interface{}) (bool, error) {
-	return coll.SimpleAggregateFirstWithCtx(ctx(), result, stages...)
+	ctx, cancel := ctx()
+	defer cancel()
+
+	return coll.SimpleAggregateFirstWithCtx(ctx, result, stages...)
 }
 
 // SimpleAggregateFirstWithCtx performs a simple aggregation, decodes the first aggregate result and returns it using the provided result parameter.
@@ -199,7 +241,10 @@ func (coll *Collection) SimpleAggregateFirstWithCtx(ctx context.Context, result 
 
 // SimpleAggregate is just same as SimpleAggregateWithCtx, but doesn't get context param.
 func (coll *Collection) SimpleAggregate(results interface{}, stages ...interface{}) error {
-	return coll.SimpleAggregateWithCtx(ctx(), results, stages...)
+	ctx, cancel := ctx()
+	defer cancel()
+
+	return coll.SimpleAggregateWithCtx(ctx, results, stages...)
 }
 
 // SimpleAggregateWithCtx performs a simple aggregation, decodes the aggregate result and returns the list using the provided result parameter.
@@ -218,7 +263,10 @@ func (coll *Collection) SimpleAggregateWithCtx(ctx context.Context, results inte
 // SimpleAggregateCursor is just same as SimpleAggregateCursorWithCtx, but
 // doesn't get context.
 func (coll *Collection) SimpleAggregateCursor(stages ...interface{}) (*mongo.Cursor, error) {
-	return coll.SimpleAggregateCursorWithCtx(ctx(), stages...)
+	ctx, cancel := ctx()
+	defer cancel()
+
+	return coll.SimpleAggregateCursorWithCtx(ctx, stages...)
 }
 
 // SimpleAggregateCursorWithCtx performs a simple aggregation and returns a cursor over the resulting documents.

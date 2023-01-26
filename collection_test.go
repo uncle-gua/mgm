@@ -105,7 +105,10 @@ func TestCollection_SimpleFind(t *testing.T) {
 	cur, err := mgm.Coll(&Doc{}).Find(filter)
 	util.AssertErrIsNil(t, err)
 
-	util.AssertErrIsNil(t, cur.All(mgm.Ctx(), &expectedResult))
+	ctx, cancel := mgm.Ctx()
+	defer cancel()
+
+	util.AssertErrIsNil(t, cur.All(ctx, &expectedResult))
 
 	require.Equal(t, len(expectedResult), len(gotResult))
 
@@ -136,7 +139,11 @@ func TestCollection_SimpleAggregateFirst(t *testing.T) {
 	// Create same aggregation by raw methods
 	cur, err := mgm.Coll(&Doc{}).Aggregate(bson.A{builder.S(group)}, nil)
 	util.AssertErrIsNil(t, err)
-	util.AssertErrIsNil(t, cur.All(mgm.Ctx(), &expectedResult))
+
+	ctx, cancel := mgm.Ctx()
+	defer cancel()
+
+	util.AssertErrIsNil(t, cur.All(ctx, &expectedResult))
 	assert.Equal(t, expectedResult[0], gotResult)
 }
 
@@ -175,7 +182,10 @@ func TestCollection_SimpleAggregate(t *testing.T) {
 	cur, err := mgm.Coll(&Doc{}).Aggregate(bson.A{builder.S(group), project}, nil)
 	util.AssertErrIsNil(t, err)
 
-	util.AssertErrIsNil(t, cur.All(mgm.Ctx(), &expectedResult))
+	ctx, cancel := mgm.Ctx()
+	defer cancel()
+
+	util.AssertErrIsNil(t, cur.All(ctx, &expectedResult))
 
 	require.Equal(t, len(expectedResult), len(gotResult))
 

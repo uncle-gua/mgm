@@ -323,7 +323,9 @@ func TestReturnErrorInCreatingHook_Celebrity(t *testing.T) {
 	celebrity := NewCelebrity("Ali", 24)
 
 	// Set listeners to mocked hooks:
-	ctx := mgm.Ctx()
+	ctx, cancel := mgm.Ctx()
+	defer cancel()
+
 	celebrity.On("Creating", ctx).Return(creatingErr)
 
 	err := mgm.Coll(celebrity).CreateWithCtx(ctx, celebrity)
@@ -343,7 +345,9 @@ func TestCreatingDocHooks_Celebrity(t *testing.T) {
 	celebrity := NewCelebrity("Ali", 24)
 
 	// Set listeners to mocked hooks:
-	ctx := mgm.Ctx()
+	ctx, cancel := mgm.Ctx()
+	defer cancel()
+
 	celebrity.On("Creating", ctx).Return(nil)
 	celebrity.On("Created", ctx).Return(nil)
 	celebrity.On("Saving", ctx).Return(nil)
@@ -361,7 +365,9 @@ func TestReturnErrorInSavingHook_Celebrity(t *testing.T) {
 	celebrity := NewCelebrity("Ali", 24)
 
 	// Set listeners to mocked hooks:
-	ctx := mgm.Ctx()
+	ctx, cancel := mgm.Ctx()
+	defer cancel()
+
 	celebrity.On("Creating", ctx).Return(nil)
 	celebrity.On("Saving", ctx).Return(savingErr)
 
@@ -382,7 +388,9 @@ func TestSavingDocHooks_Celebrity(t *testing.T) {
 	celebrity := NewCelebrity("Ali", 24)
 
 	// Set listeners to mocked hooks:
-	ctx := mgm.Ctx()
+	ctx, cancel := mgm.Ctx()
+	defer cancel()
+
 	celebrity.On("Creating", ctx).Return(nil)
 	celebrity.On("Created", ctx).Return(nil)
 	celebrity.On("Saving", ctx).Return(nil)
@@ -394,7 +402,8 @@ func TestSavingDocHooks_Celebrity(t *testing.T) {
 func TestReturnErrorInUpdatingHook_Celebrity(t *testing.T) {
 	setupDefConnection()
 	resetCollection()
-	ctx := mgm.Ctx()
+	ctx, cancel := mgm.Ctx()
+	defer cancel()
 
 	oldName := "Ali"
 	updatingErr := errors.New("test error")
@@ -420,7 +429,8 @@ func TestReturnErrorInUpdatingHook_Celebrity(t *testing.T) {
 func TestUpdatingDocHooks_Celebrity(t *testing.T) {
 	setupDefConnection()
 	resetCollection()
-	ctx := mgm.Ctx()
+	ctx, cancel := mgm.Ctx()
+	defer cancel()
 
 	newName := "Mehran"
 	celebrity := NewCelebrity("Ali", 24)
@@ -447,7 +457,8 @@ func TestUpdatingDocHooks_Celebrity(t *testing.T) {
 func TestReturnErrorInDeletingHook_Celebrity(t *testing.T) {
 	setupDefConnection()
 	resetCollection()
-	ctx := mgm.Ctx()
+	ctx, cancel := mgm.Ctx()
+	defer cancel()
 
 	deletingErr := errors.New("test error")
 	celebrity := NewCelebrity("Ali", 24)
@@ -470,7 +481,8 @@ func TestReturnErrorInDeletingHook_Celebrity(t *testing.T) {
 func TestDeletingDocHooks_Celebrity(t *testing.T) {
 	setupDefConnection()
 	resetCollection()
-	ctx := mgm.Ctx()
+	ctx, cancel := mgm.Ctx()
+	defer cancel()
 
 	celebrity := NewCelebrity("Ali", 24)
 

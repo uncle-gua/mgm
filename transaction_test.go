@@ -68,7 +68,10 @@ func TestTransactionWithCtx(t *testing.T) {
 
 	d := &Doc{Name: "check", Age: 10}
 
-	err := mgm.TransactionWithCtx(mgm.Ctx(), func(session mongo.Session, sc mongo.SessionContext) error {
+	ctx, cancel := mgm.Ctx()
+	defer cancel()
+
+	err := mgm.TransactionWithCtx(ctx, func(session mongo.Session, sc mongo.SessionContext) error {
 
 		err := mgm.Coll(d).CreateWithCtx(sc, d)
 

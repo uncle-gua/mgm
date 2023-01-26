@@ -29,7 +29,8 @@ func TestPanicOnGetCtx(t *testing.T) {
 		require.NotNil(t, recover(), "Getting context before set default config must panic")
 	}()
 
-	_ = mgm.Ctx()
+	_, cancel := mgm.Ctx()
+	defer cancel()
 }
 
 func TestGetCtx(t *testing.T) {
@@ -40,7 +41,8 @@ func TestGetCtx(t *testing.T) {
 	// Setup connection
 	setupDefConnection()
 
-	ctx := mgm.Ctx()
+	ctx, cancel := mgm.Ctx()
+	defer cancel()
 
 	_, ok := ctx.Deadline()
 	require.True(t, ok, "context should having deadline.")
@@ -63,7 +65,10 @@ func TestGetNewClient(t *testing.T) {
 	util.AssertErrIsNil(t, err)
 
 	// Check client connection:
-	err = client.Ping(mgm.Ctx(), readpref.Primary())
+	ctx, cancel := mgm.Ctx()
+	defer cancel()
+
+	err = client.Ping(ctx, readpref.Primary())
 	util.AssertErrIsNil(t, err)
 
 	// Get New Collection:

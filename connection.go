@@ -21,19 +21,17 @@ type Config struct {
 }
 
 // NewCtx function creates and returns a new context with the specified timeout.
-func NewCtx(timeout time.Duration) context.Context {
+func NewCtx(timeout time.Duration) (context.Context, context.CancelFunc) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
-	defer cancel()
-
-	return ctx
+	return ctx, cancel
 }
 
 // Ctx function creates and returns a new context with a default timeout value.
-func Ctx() context.Context {
+func Ctx() (context.Context, context.CancelFunc) {
 	return ctx()
 }
 
-func ctx() context.Context {
+func ctx() (context.Context, context.CancelFunc) {
 	return NewCtx(config.CtxTimeout)
 }
 
@@ -44,9 +42,12 @@ func NewClient(opts ...*options.ClientOptions) (*mongo.Client, error) {
 		return nil, err
 	}
 
-	if err = client.Connect(Ctx()); err != nil {
+	ctx, cancel := ctx()
+	if err = client.Connect(ctx); err != nil {
 		return nil, err
 	}
+
+	defer cancel()
 
 	return client, nil
 }

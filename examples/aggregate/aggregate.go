@@ -33,7 +33,9 @@ func lookup() error {
 		builder.S(builder.Lookup(authorColl.Name(), "author_id", field.ID, "author")),
 	}
 
-	ctx := mgm.Ctx()
+	ctx, cancel := mgm.Ctx()
+	defer cancel()
+
 	cur, err := mgm.Coll(&book{}).AggregateWithCtx(ctx, pipeline)
 
 	if err != nil {
